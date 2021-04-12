@@ -1,66 +1,223 @@
-import time,sys
+import random, time, sys
 from babel import numbers
 
-wrong_password = 0
 
 
-allowed_users = ['seye', 'ryan', 'hakeem']
-allowed_password = ['pseye', 'pryan', 'phakeem']
-allowed_input = [1, 2, 3]
-balance_allowed_users = [0, 0, 0]
 
-while (1):
-    username = input("What is your name? \n")
 
-    if (username not in allowed_users):
-        time.sleep(.5)
-        print("Name does not exist. please try again.")
-        time.sleep(.5)
-        continue
+def database_listing():
+    w = list()
+    k = list()
+
+    for p_id, p_info in user_database.items():
+
+        for key in p_info:
+            w.append(key)
+            k.append(p_info[key])
+
+    return k
+
+
+
+
+
+def login():
+    global p # used to take password out
+
+    acc = input("Please your account number?\n")
+    password = input("Please enter your password?\n")
+    p = password
+
+    L = database_listing()
+
+    if acc and password in L:
+
+        allowed_acc = L.index(acc)
+        allowed_password = L.index(password)
+        # c = ""
+        Account_name = L[allowed_password - 1]
+        print("welcome", Account_name)
+        time.sleep(2)
+        banking_Operation()
+
+    #checks if account number already exist in database
+    elif acc in L:
+        print("Password or Username Incorrect. Try to login again")
 
     else:
-        allowed_users_position = allowed_users.index(username)
-        password = input("Please enter your password")
-        if password != allowed_password[allowed_users_position]:
-            print("Wrong password")
-            wrong_password += 1
-            if wrong_password == 5:
-                sys.exit("wrong password. pleases try again later")
+        print("User does not exist. Register account")
 
 
-        else:
-            print( "Logging in...")
-            time.sleep(2)
-            print("welcome %s" % username)
-            time.sleep(2)
-            print("These are the available options:")
-            print("1. Withdrawal")
-            print("2. Deposit")
-            print("3. Complaint")
+    return False
 
-            selection = int(input("Enter a number\n"))
-            if selection not in allowed_input:
-                print("wrong entry")
-                time.sleep(.5)
+
+
+
+def get_Password(): # returns password
+    return p
+
+
+
+
+
+def banking_Operation():
+
+    print("What will you be doing today?")
+    print("Press 1 to withdraw")
+    print("Press 2 to deposit cash")
+    print("Press 3 to lodge a complaint")
+    print("Press 4 to logout")
+
+    select_Operation = int(input("please select an option:\n"))
+
+    if select_Operation == 1:
+
+        time.sleep(1)
+        withdrawal_amount = int(input("How much would you like to withdraw?\n"))
+
+        time.sleep(3)
+        print("please take your cash")
+
+    if select_Operation == 2:
+        print("Loading...")
+        time.sleep(2)
+        deposit_amount = int(input("How much would you like to deposit?\n"))
+        L = database_listing()
+        F = get_Password()
+        balance_allowed_users = L[L.index(F) + 1]
+        balance = deposit_amount + int(balance_allowed_users)
+        babell = str(numbers.format_currency(balance, 'NGN', locale = "en_NG"))
+        time.sleep(2)
+
+        print("your balance is",babell[0:1],babell[1:])
+        time.sleep(1)
+        print("Thank you for banking wiht us.")
+        time.sleep(1)
+
+    if select_Operation == 3:
+
+        time.sleep(1)
+        comp_laint = input("Enter your complaint\n")
+        time.sleep(1)
+        print("Thank you for your feedback")
+
+    if select_Operation == 4:
+        print("Thank you for banking with us")
+        time.sleep(3)
+        return False
+
+
+
+
+
+def register():
+
+    print("Please fill the following to create an account")
+
+    name = input("Please enter your name\n")
+    d = 0
+
+    if name.isalpha()== False:
+        return True
+    else:
+        password = input("Please enter your password\n")
+        s = ['1','2','3','4','5','6','7','8','9','0']
+        w = list()
+        c = ""
+        random.shuffle(s)
+        Account_num =c.join(s)
+
+        for d,v in user_database.items():
+            w.append(d)
+
+        if d not in w:
+            user_database[d] = {"account":Account_num,"name":name, "password":password, "balance_allowed_users":0}
+
+
+            print("Saving your details...")
+            time.sleep(3)
+            print("Your account number is")
+            print(Account_num)
+            print("Please copy your account number")
+            time.sleep(1)
+            Y = ['Y','y',"Yes","yes", 'YES']
+            N = ['N', 'n', 'No','no', 'NO']
+
+            In = input("Would you like to login to your account?(Y/N)\n")
+
+            if In in Y:
+                return True
+            elif In in N:
+                return False
+            else:
+                return False
+        elif d in w:
+            user_database[d+1] = {"account":Account_num,"name":name, "password":password, "balance_allowed_users":0}
+
+
+            print("Saving your details...")
+            time.sleep(3)
+            print("Your account number is")
+            print(Account_num)
+            print("Please copy your account number")
+            time.sleep(1)
+            Y = ['Y','y',"Yes","yes", 'YES']
+            N = ['N', 'n', 'No','no', 'NO']
+
+            In = input("Would you like to login to your account?(Y/N)\n")
+
+            if In in Y:
+                return True
+            elif In in N:
+                return False
+            else:
+                return False
+
+
+user_database = {}
+
+while(1):
+
+    print("Welcome. What would you like to do today?\n")
+    time.sleep(2)
+    print("1. to login")
+    print("2. to register")
+
+    entered_num = input("please select a number:\n")
+    failed = 0
+
+    print("Loading...")
+    time.sleep(2)
+
+    if entered_num == "1":
+        Log_in = False
+
+        while Log_in == False:
+            Log_in = login()
+
+
+            if Log_in == False:
+                break
+            else:
+                banking_Operation()
+            break
+
+
+
+    elif entered_num == "2":
+        Reg_ister = False
+
+        while Reg_ister == False:
+            Reg_ister = register()
+
+            if Reg_ister == False:
+                break
+
+            elif Reg_ister == True:
+                login()
+
+            else:
                 continue
 
-            elif selection == 1:
-                time.sleep(1)
-                withdrawal_amount = int(input("How much would you like to withdraw?"))
-                time.sleep(3)
-                print("please take your cash")
-
-            elif selection == 2:
-                time.sleep(1)
-                deposit_amount = int(input("How much would you like to deposit?"))
-                balance = deposit_amount + balance_allowed_users[allowed_users_position]
-                babell = str(numbers.format_currency(balance, 'NGN', locale = "en_NG"))
-                print(babell, "sh")
-                time.sleep(2)
-                print("your balance is",babell[0:1],babell[1:])
-
-            elif selection == 3:
-                time.sleep(1)
-                comp_laint = input("Enter your complaint")
-                time.sleep(1)
-                print("Thank you for your feedback")
+    else:
+        print("Login failed, username or password incorrect")

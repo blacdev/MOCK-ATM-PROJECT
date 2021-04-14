@@ -3,7 +3,7 @@
 # - generate user id
 
 #Login
-# - (account number or email) and pasword
+# - (account number or email) and password
 
 # banking operations
 
@@ -14,11 +14,13 @@ from babel import numbers
 database = {}
 
 def init():
+    time.sleep(1)
     print("welcome to bank OOO")
+    time.sleep(2)
     isValidOption = False
     while isValidOption == False:
 
-        existingUser = int(input("Do you have an account with us:\n 1. (yes)\n 2. (no)\n"))
+        existingUser = int(input("Do you have an account with us:\n 1. (yes)\n 2. (no)\n 3. (Forgot password)\n"))
 
         if (existingUser == 1):
             isValidOption = True
@@ -27,11 +29,18 @@ def init():
         elif existingUser == 2:
             isValidOption = True
             register()
+
             if register() == False:
                 print("Thank you for opening an account with us today")
                 init()
+
             else:
                 login()
+
+        elif existingUser == 3:
+            isValidOption = True
+            forgotPassword()
+
         else:
             print("You have selected an invalid option")
 
@@ -46,17 +55,22 @@ def login():
         loginError += 1
         accountNumberFromUser = int(input("Please enter your account number\n"))
         userPassword = input("Please enter your password\n")
-        for accountNumber, userDetails in database.items():
 
+        for accountNumber, userDetails in database.items():
             if (accountNumber == accountNumberFromUser) and (userDetails[4] == userPassword):
                 isLoginSuccesful = True
                 bankingOperation(userDetails)
 
+    print("invalid user")
+    time.sleep(2)
+    decision = int(input("would you like to remember forgot password?\n 1. forgot password\n 2. back to login page\n 3. back to homepage"))
 
-
-    forgotPassword()
-
-
+    if decision == 1:
+        forgotPassword()
+    elif decision == 2:
+        login()
+    elif decision == 3:
+        init()
 
 def register():
     Y = ['Y','y',"Yes","yes", 'YES']
@@ -82,8 +96,13 @@ def register():
 
     if askToLogin in Y:
         login()
+
     elif askToLogin in N:
         init()
+
+    else:
+        init()
+
 
 def bankingOperation(user):
     print("welcome %s %s" % (user[0], user[1]))
@@ -159,19 +178,32 @@ def Logout():
     login()
 
 def forgotPassword():
-    print("invalid user")
+    print("Loading page...")
     time.sleep(2)
-    forgotPasswordOption = int(input("Please press \n1. to use 'Forgot Password'\n2. to go back to login page\n"))
+    enterUserName = input("Please enter your username to confirm if user exist\n")
 
-    if (forgotPasswordOption == 1):
-        forgotPassword()
-    elif (forgotPasswordOption == 2):
-        login()
-    else:
-        init()
+    for accountNumber, user in database.items():
+
+        if (enterUserName != user[2]):
+            print("User does not exist")
+            print("going back to login page...")
+            time.sleep(3)
+            break
+
+        else:
+            print("Your account number is", accountNumber)
+            print("Your password is ", user[4])
+            time.sleep(5)
+            print("going back to login page...")
+            time.sleep(1)
+            init()
+    login()
 
 def generateAccountNumber():
     return random.randrange(1111111111, 9999999999)
+
+
+
 
 
 

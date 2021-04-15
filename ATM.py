@@ -188,7 +188,9 @@ def Complaint(user):
     bankingOperation(user)
 
 def balance(user):
-    print("Your balance is ", user[5])
+    time.sleep(3)
+    babell = str(numbers.format_currency(user[5], 'NGN', locale = "en_NG"))
+    print("Your balance is ", babell)
     bankingOperation(user)
 
 def Logout():

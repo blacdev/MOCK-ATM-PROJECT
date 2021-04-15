@@ -143,22 +143,41 @@ def withdrawalOperation(user):
     time.sleep(1)
     withdrawal_amount = int(input("How much would you like to withdraw?\n"))
 
-    time.sleep(3)
-    print("please take your cash")
-    bankingOperation(user)
+    if withdrawal_amount > user[5]:
+        print("you have insufficient balance")
+        time.sleep(2)
+        bankingOperation(user)
+
+    elif withdrawal_amount < user[5]:
+        balance = user[5]- withdrawal_amount
+        time.sleep(3)
+        print("please take your cash")
+        user[5] = balance
+        time.sleep(2)
+        bankingOperation(user)
+
+    elif withdrawal_amount == user[0]:
+        balance = user[5] - withdrawal_amount
+        time.sleep(3)
+        print("please take your cash")
+        user[5] = balance
+        timee.sleep(2)
+        bankingOperation(user)
+
+
 
 
 def depositOperation(user):
     print("Loading...")
     time.sleep(2)
     deposit_amount = int(input("How much would you like to deposit?\n"))
-    balance_allowed_users = user[5]
-    balance = deposit_amount + int(balance_allowed_users)
+    balance = deposit_amount + user[5]
     babell = str(numbers.format_currency(balance, 'NGN', locale = "en_NG"))
     time.sleep(2)
 
-    print("Thank you for banking with us", user[0] + ".")
+    print("Thank you for banking with us" + ".")
     time.sleep(1)
+    user[5] = balance
     bankingOperation(user)
 
 def Complaint(user):
@@ -175,7 +194,7 @@ def balance(user):
 def Logout():
     print("Thank you for banking with us")
     time.sleep(3)
-    login()
+    init()
 
 def forgotPassword():
     print("Loading page...")
@@ -197,14 +216,11 @@ def forgotPassword():
             print("going back to login page...")
             time.sleep(1)
             init()
+
     login()
 
 def generateAccountNumber():
     return random.randrange(1111111111, 9999999999)
-
-
-
-
 
 
 
